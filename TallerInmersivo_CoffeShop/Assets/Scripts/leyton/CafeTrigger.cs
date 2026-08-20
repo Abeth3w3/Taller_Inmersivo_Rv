@@ -2,7 +2,11 @@ using UnityEngine;
 using TMPro;
 using System.Collections;
 
-public class CafeTrigger : MonoBehaviour
+// Ahora hereda de Interactable en vez de MonoBehaviour: esto hace que
+// el cliente se detecte automáticamente con tu sistema de "E" existente
+// (PlayerInteract → FindClosestInteractable), siempre que su Collider2D
+// esté en el mismo Layer que configuraste en "Interact Layer" del Player.
+public class CafeTrigger : Interactable
 {
     public Transform pedirCafe;
     public Transform salida;
@@ -19,6 +23,10 @@ public class CafeTrigger : MonoBehaviour
     private bool esFrente = false;
     private bool mostrando = false;
     private bool yendoASalida = false;
+
+    // Nuevo: true cuando el cliente físicamente llegó al punto de pedir café
+    // y ya está a la espera de que el jugador presione E.
+    private bool listoParaAtender = false;
 
     void Start()
     {
@@ -55,7 +63,10 @@ public class CafeTrigger : MonoBehaviour
     {
         if (other.transform == pedirCafe && esFrente && !mostrando && !yendoASalida)
         {
-            StartCoroutine(MostrarCafe());
+            // Antes: StartCoroutine(MostrarCafe()) directo aquí.
+            // Ahora: solo queda "a la espera". El jugador tiene que
+            // acercarse y presionar E (ver método Interact más abajo).
+            listoParaAtender = true;
         }
         else if (other.transform == salida && yendoASalida)
         {
@@ -64,6 +75,17 @@ public class CafeTrigger : MonoBehaviour
                 Spawner.instancia.NPCTermino(this);
             }
             Destroy(gameObject);
+        }
+    }
+
+    // Llamado automáticamente por PlayerInteract cuando el jugador presiona E
+    // estando cerca de este cliente (igual que con la cafetera, la nevera, etc).
+    public override void Interact(PlayerInventory inventory)
+    {
+        if (listoParaAtender && esFrente && !mostrando && !yendoASalida)
+        {
+            listoParaAtender = false;
+            StartCoroutine(MostrarCafe());
         }
     }
 

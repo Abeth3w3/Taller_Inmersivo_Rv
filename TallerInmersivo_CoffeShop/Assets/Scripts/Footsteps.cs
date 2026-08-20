@@ -1,7 +1,6 @@
 using UnityEngine;
-
 // Ponlo en el mismo GameObject que tu PlayerMovement.
-// No modifica ese script, solo lee la velocidad del Rigidbody2D.
+// No modifica ese script, solo lee la posición del Rigidbody2D.
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerFootsteps : MonoBehaviour
 {
@@ -11,22 +10,34 @@ public class PlayerFootsteps : MonoBehaviour
 
     private Rigidbody2D rb;
     private float stepTimer;
-    private const float moveThreshold = 0.05f;
+    private Vector2 lastPosition;
+
+    // Distancia mínima recorrida por frame para considerar que se está moviendo.
+    // Ajusta este valor si los pasos suenan de más o de menos.
+    private const float moveThreshold = 0.001f;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
     }
 
-    void Update()
+    void Start()
     {
-        // NOTA: si tu proyecto usa una versión de Unity donde Rigidbody2D.velocity
-        // aún NO fue renombrado a linearVelocity, cambia esta línea por rb.velocity.
-        bool isMoving = rb.linearVelocity.sqrMagnitude > moveThreshold * moveThreshold;
+        lastPosition = rb.position;
+    }
+
+    void FixedUpdate()
+    {
+        // Medimos por posición en vez de por velocity: funciona igual
+        // tanto si el Rigidbody2D es Dynamic como Kinematic (MovePosition
+        // no actualiza linearVelocity/velocity en modo Kinematic).
+        float distanceMoved = Vector2.Distance(rb.position, lastPosition);
+        bool isMoving = distanceMoved > moveThreshold;
+        lastPosition = rb.position;
 
         if (isMoving)
         {
-            stepTimer -= Time.deltaTime;
+            stepTimer -= Time.fixedDeltaTime;
             if (stepTimer <= 0f)
             {
                 PlayFootstep();
@@ -42,7 +53,12 @@ public class PlayerFootsteps : MonoBehaviour
     private void PlayFootstep()
     {
         if (footstepClips == null || footstepClips.Length == 0) return;
-        if (AudioManager.Instance == null) return;
+
+        if (AudioManager.Instance == null)
+        {
+            Debug.LogWarning("AudioManager.Instance es null. ¿Existe el GameObject 'AudioManager' en la escena?");
+            return;
+        }
 
         AudioClip clip = footstepClips[Random.Range(0, footstepClips.Length)];
         AudioManager.Instance.PlaySFX(clip, volume);
