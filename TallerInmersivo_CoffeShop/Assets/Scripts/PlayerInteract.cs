@@ -21,15 +21,26 @@ public class PlayerInteract : MonoBehaviour
 
         if (inventory == null)
             Debug.LogError("No asignaste PlayerInventory en el Inspector");
+
+        if (interactionPoint == null)
+            Debug.LogError("No encontré el InteractionPoint (revisa que exista un hijo llamado exactamente 'InteractionPoint')");
     }
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.E))
         {
+            Debug.Log("Presionaste E");
+
             if (inventory == null)
             {
                 Debug.LogError("Inventory es NULL");
+                return;
+            }
+
+            if (interactionPoint == null)
+            {
+                Debug.LogError("InteractionPoint es NULL");
                 return;
             }
 
@@ -44,20 +55,39 @@ public class PlayerInteract : MonoBehaviour
                 return;
             }
 
+            // Buscamos el Interactable más cercano DE VERDAD:
+            // usamos ClosestPoint del propio collider (borde real),
+            // no el pivote del objeto, para que un collider grande
+            // (como el de una estantería) no "robe" la interacción
+            // a algo que está físicamente más cerca (como la rocola).
+            Interactable closest = null;
+            float closestDist = float.MaxValue;
+
             foreach (Collider2D hit in hits)
             {
                 Debug.Log("Detecté: " + hit.name);
 
                 Interactable interactable = hit.GetComponent<Interactable>();
+                if (interactable == null) continue;
 
-                if (interactable != null)
+                Vector2 nearestPoint = hit.ClosestPoint(interactionPoint.position);
+                float dist = Vector2.Distance(interactionPoint.position, nearestPoint);
+
+                if (dist < closestDist)
                 {
-                    interactable.Interact(inventory);
-                    return;
+                    closestDist = dist;
+                    closest = interactable;
                 }
             }
 
-            Debug.Log("Detecté colliders, pero ninguno tiene Interactable");
+            if (closest != null)
+            {
+                closest.Interact(inventory);
+            }
+            else
+            {
+                Debug.Log("Detecté colliders, pero ninguno tiene Interactable");
+            }
         }
     }
 
