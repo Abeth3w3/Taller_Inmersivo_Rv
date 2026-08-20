@@ -7594,7 +7594,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1337949780af8684290f002ed85dfa70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerFootsteps
-  footstepClips: []
+  footstepClips:
+  - {fileID: 8300000, guid: 3d253a3c20ef1ce438f3833aa93214d4, type: 3}
+  - {fileID: 8300000, guid: f0cf21f3bbb62b340b9f5370fa023ab6, type: 3}
+  - {fileID: 8300000, guid: 22accf4e0a387504badf3ccd8e940126, type: 3}
   volume: 0.6
   stepInterval: 0.35
 --- !u!114 &1478196602
