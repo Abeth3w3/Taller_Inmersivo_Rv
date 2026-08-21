@@ -2,10 +2,6 @@ using UnityEngine;
 using TMPro;
 using System.Collections;
 
-// Ahora hereda de Interactable en vez de MonoBehaviour: esto hace que
-// el cliente se detecte automáticamente con tu sistema de "E" existente
-// (PlayerInteract → FindClosestInteractable), siempre que su Collider2D
-// esté en el mismo Layer que configuraste en "Interact Layer" del Player.
 public class CafeTrigger : Interactable
 {
     public Transform pedirCafe;
@@ -23,10 +19,16 @@ public class CafeTrigger : Interactable
     private bool esFrente = false;
     private bool mostrando = false;
     private bool yendoASalida = false;
-
-    // Nuevo: true cuando el cliente físicamente llegó al punto de pedir café
-    // y ya está a la espera de que el jugador presione E.
     private bool listoParaAtender = false;
+
+    private int layerNormal;
+    private int layerInteraccion;
+
+    void Awake()
+    {
+        layerNormal = gameObject.layer;
+        layerInteraccion = LayerMask.NameToLayer("Interaction");
+    }
 
     void Start()
     {
@@ -45,6 +47,12 @@ public class CafeTrigger : Interactable
     {
         objetivoActual = destino;
         esFrente = frente;
+
+        if (!frente)
+        {
+            gameObject.layer = layerNormal;
+            listoParaAtender = false;
+        }
     }
 
     void Update()
@@ -63,10 +71,8 @@ public class CafeTrigger : Interactable
     {
         if (other.transform == pedirCafe && esFrente && !mostrando && !yendoASalida)
         {
-            // Antes: StartCoroutine(MostrarCafe()) directo aquí.
-            // Ahora: solo queda "a la espera". El jugador tiene que
-            // acercarse y presionar E (ver método Interact más abajo).
             listoParaAtender = true;
+            gameObject.layer = layerInteraccion;
         }
         else if (other.transform == salida && yendoASalida)
         {
@@ -78,13 +84,12 @@ public class CafeTrigger : Interactable
         }
     }
 
-    // Llamado automáticamente por PlayerInteract cuando el jugador presiona E
-    // estando cerca de este cliente (igual que con la cafetera, la nevera, etc).
     public override void Interact(PlayerInventory inventory)
     {
         if (listoParaAtender && esFrente && !mostrando && !yendoASalida)
         {
             listoParaAtender = false;
+            gameObject.layer = layerNormal;
             StartCoroutine(MostrarCafe());
         }
     }

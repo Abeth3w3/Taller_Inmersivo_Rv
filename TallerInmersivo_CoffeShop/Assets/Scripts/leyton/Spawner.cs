@@ -18,6 +18,9 @@ public class Spawner : MonoBehaviour
     public int maxNPCs = 5;
     public float tiempoEntreSpawns = 1.5f;
 
+    public AudioSource audioSource;
+    public AudioClip sonidoCampana;
+
     private List<CafeTrigger> cola = new List<CafeTrigger>();
 
     void Awake()
@@ -49,6 +52,11 @@ public class Spawner : MonoBehaviour
 
         cola.Add(npc);
         ActualizarPosicionesFila();
+
+        if (audioSource != null && sonidoCampana != null)
+        {
+            audioSource.PlayOneShot(sonidoCampana);
+        }
     }
 
     private void ActualizarPosicionesFila()
