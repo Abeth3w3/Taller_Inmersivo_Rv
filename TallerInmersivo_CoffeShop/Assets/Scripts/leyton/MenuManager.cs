@@ -3,17 +3,21 @@ using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour
 {
+    public GameObject panelInstrucciones;
+    public AudioSource musicaFondo;
+    private bool musicaActiva = true;
+
     public void IniciarJuego()
     {
         SceneManager.LoadScene("SampleScene");
     }
 
-    public void MostrarInstrucciones(GameObject panelInstrucciones)
+    public void MostrarInstrucciones()
     {
         panelInstrucciones.SetActive(true);
     }
 
-    public void CerrarInstrucciones(GameObject panelInstrucciones)
+    public void CerrarInstrucciones()
     {
         panelInstrucciones.SetActive(false);
     }
@@ -21,5 +25,18 @@ public class MenuManager : MonoBehaviour
     public void SalirJuego()
     {
         Application.Quit();
+    }
+
+    public void ToggleMusica()
+    {
+        musicaActiva = !musicaActiva;
+        if (musicaActiva)
+        {
+            musicaFondo.Play();
+        }
+        else
+        {
+            musicaFondo.Pause();
+        }
     }
 }

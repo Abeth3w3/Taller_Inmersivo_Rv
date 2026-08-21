@@ -99,7 +99,7 @@ public class PlayerInteract : MonoBehaviour
 
         foreach (Collider2D hit in hits)
         {
-            Interactable interactable = hit.GetComponentInParent<Interactable>();
+            Interactable interactable = hit.GetComponent<Interactable>();
             if (interactable == null) continue;
 
             Vector2 nearestPoint = hit.ClosestPoint(interactionPoint.position);
