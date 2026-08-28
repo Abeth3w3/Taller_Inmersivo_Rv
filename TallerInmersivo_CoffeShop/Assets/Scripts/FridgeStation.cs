@@ -7,6 +7,7 @@ public class FridgeStation : Interactable
         if (inventory.HasItem(ItemType.EmptyContainer))
         {
             inventory.SetItem(ItemType.MilkContainer);
+            PlaySound();
             Debug.Log("Llenaste el recipiente con leche.");
         }
         else
