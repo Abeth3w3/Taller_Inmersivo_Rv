@@ -7,6 +7,7 @@ public enum ItemType
     DarkCoffee,
     EmptyContainer,
     MilkContainer,
+    HotMilk,
     MilkCoffee
 }
 

@@ -13,7 +13,6 @@ public class PlayerMovement : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private Transform interactionPoint;
 
-    // Dirección hacia donde mira el personaje
     private Vector2 facingDirection = Vector2.right;
 
     void Awake()
@@ -31,20 +30,17 @@ public class PlayerMovement : MonoBehaviour
 
         input = input.normalized;
 
-        // Guardar la última dirección en la que se movió
         if (input != Vector2.zero)
         {
             facingDirection = input;
         }
 
-        // Animaciones
         if (animator != null)
         {
             animator.SetFloat("MoveX", input.x);
             animator.SetBool("IsMoving", input != Vector2.zero);
         }
 
-        // Voltear sprite solo cuando va a izquierda o derecha
         if (spriteRenderer != null)
         {
             if (facingDirection.x < -0.1f)
@@ -53,18 +49,16 @@ public class PlayerMovement : MonoBehaviour
                 spriteRenderer.flipX = false;
         }
 
-        // Mover el punto de interacción hacia donde mira
         if (interactionPoint != null)
         {
             Vector2 dir = facingDirection;
 
-            // Si la dirección es diagonal, prioriza el eje con mayor magnitud
             if (Mathf.Abs(dir.x) > Mathf.Abs(dir.y))
                 dir = new Vector2(Mathf.Sign(dir.x), 0f);
             else
                 dir = new Vector2(0f, Mathf.Sign(dir.y));
 
-            interactionPoint.localPosition = dir * interactionDistance;
+            interactionPoint.position = (Vector2)transform.position + dir * interactionDistance;
         }
     }
 

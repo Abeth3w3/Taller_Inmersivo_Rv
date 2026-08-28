@@ -7,6 +7,8 @@ public class ContainerStation : Interactable
         if (inventory.heldItem == ItemType.None)
         {
             inventory.SetItem(ItemType.EmptyContainer);
+            PlaySound();
+            Debug.Log("Tomaste un recipiente vacío");
         }
         else
         {

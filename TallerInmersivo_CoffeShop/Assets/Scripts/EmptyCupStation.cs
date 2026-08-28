@@ -13,6 +13,7 @@ public class EmptyCupStation : Interactable
         if (inventory.heldItem == ItemType.None)
         {
             inventory.SetItem(ItemType.EmptyCup);
+            PlaySound();
             Debug.Log("Tomaste una taza vacía");
         }
         else
