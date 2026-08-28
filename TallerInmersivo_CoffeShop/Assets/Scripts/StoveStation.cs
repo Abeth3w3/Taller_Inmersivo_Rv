@@ -10,12 +10,27 @@ public class StoveStation : Interactable
     public float tiempoCalentado = 4f;
 
     [Header("Sonidos (opcionales, uno por cada paso)")]
+    public AudioClip sonidoInteractuar;
     public AudioClip sonidoColocarRecipiente;
     public AudioClip sonidoListo;
     public AudioClip sonidoRecoger;
 
+    private AudioSource audioSource;
+
+    void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
+        audioSource.playOnAwake = false;
+    }
+
     public override void Interact(PlayerInventory inventory)
     {
+        PlaySound(sonidoInteractuar);
+
         switch (estado)
         {
             case Estado.Vacia:
@@ -59,5 +74,11 @@ public class StoveStation : Interactable
         estado = Estado.Lista;
         PlaySound(sonidoListo);
         Debug.Log("¡La leche está caliente y lista!");
+    }
+
+    private void PlaySound(AudioClip clip)
+    {
+        if (clip == null) return;
+        audioSource.PlayOneShot(clip);
     }
 }
