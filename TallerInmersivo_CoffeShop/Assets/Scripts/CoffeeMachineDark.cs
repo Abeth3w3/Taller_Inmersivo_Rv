@@ -10,27 +10,12 @@ public class CoffeeMachineDark : Interactable
     public float tiempoPreparacion = 4f;
 
     [Header("Sonidos (opcionales, uno por cada paso)")]
-    public AudioClip sonidoInteractuar;
     public AudioClip sonidoColocarTaza;
     public AudioClip sonidoListo;
     public AudioClip sonidoRecoger;
 
-    private AudioSource audioSource;
-
-    void Awake()
-    {
-        audioSource = GetComponent<AudioSource>();
-        if (audioSource == null)
-        {
-            audioSource = gameObject.AddComponent<AudioSource>();
-        }
-        audioSource.playOnAwake = false;
-    }
-
     public override void Interact(PlayerInventory inventory)
     {
-        PlaySound(sonidoInteractuar);
-
         switch (estado)
         {
             case Estado.Vacia:
@@ -39,6 +24,7 @@ public class CoffeeMachineDark : Interactable
                     inventory.ClearItem();
                     estado = Estado.Preparando;
                     PlaySound(sonidoColocarTaza);
+                    CoffeeProgressEvents.DispararCafeNegroEnPreparacion();
                     Debug.Log("Colocaste la taza en la cafetera. Empezando a preparar...");
                     StartCoroutine(Preparar());
                 }
@@ -58,6 +44,7 @@ public class CoffeeMachineDark : Interactable
                     inventory.SetItem(ItemType.DarkCoffee);
                     estado = Estado.Vacia;
                     PlaySound(sonidoRecoger);
+                    CoffeeProgressEvents.DispararCafeNegroRecogido();
                     Debug.Log("Recogiste el café negro.");
                 }
                 else
@@ -74,11 +61,5 @@ public class CoffeeMachineDark : Interactable
         estado = Estado.Lista;
         PlaySound(sonidoListo);
         Debug.Log("¡El café negro está listo para recoger!");
-    }
-
-    private void PlaySound(AudioClip clip)
-    {
-        if (clip == null) return;
-        audioSource.PlayOneShot(clip);
     }
 }

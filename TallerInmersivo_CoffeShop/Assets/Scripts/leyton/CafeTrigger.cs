@@ -96,6 +96,7 @@ public class CafeTrigger : Interactable
         if (cafePanel != null) cafePanel.SetActive(true);
 
         PlaySound(sonidoPedido);
+        CoffeeProgressEvents.DispararNuevoPedido(pedido);
     }
 
     private string TextoPedido(ItemType tipo)
@@ -122,6 +123,7 @@ public class CafeTrigger : Interactable
             if (cafePanel != null) cafePanel.SetActive(false);
 
             PlaySound(sonidoEntregaCorrecta);
+            CoffeeProgressEvents.DispararPedidoEntregado();
             Debug.Log("¡Gracias! Este es justo el café que pedí.");
 
             yendoASalida = true;

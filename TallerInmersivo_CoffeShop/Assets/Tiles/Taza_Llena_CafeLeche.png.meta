@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: dbb6adda4a193e3448773dad751c4690
+guid: 6e962c6ba61633d4f88b2b297720151f
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -7268375729854798593
-    second: Taza_Vacia_0
+      213: 8317303753593093511
+    second: Taza_Llena_CafeLeche_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -139,7 +139,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Taza_Vacia_0
+      name: Taza_Llena_CafeLeche_0
       rect:
         serializedVersion: 2
         x: 19
@@ -154,8 +154,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: ff42fef78ca812b90800000000000000
-      internalID: -7268375729854798593
+      spriteID: 78d70f962bffc6370800000000000000
+      internalID: 8317303753593093511
       vertices: []
       indices: 
       edges: []
@@ -174,7 +174,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Taza_Vacia_0: -7268375729854798593
+      Taza_Llena_CafeLeche_0: 8317303753593093511
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

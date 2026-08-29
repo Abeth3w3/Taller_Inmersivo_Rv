@@ -5,6 +5,7 @@ public class PlayerMovement : MonoBehaviour
 {
     public float speed = 3.5f;
     public float interactionDistance = 0.5f;
+    public bool controlHabilitado = true;
 
     private Rigidbody2D rb;
     private Vector2 input;
@@ -25,6 +26,18 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        if (!controlHabilitado)
+        {
+            input = Vector2.zero;
+
+            if (animator != null)
+            {
+                animator.SetBool("IsMoving", false);
+            }
+
+            return;
+        }
+
         input.x = Input.GetAxisRaw("Horizontal");
         input.y = Input.GetAxisRaw("Vertical");
 
@@ -37,7 +50,8 @@ public class PlayerMovement : MonoBehaviour
 
         if (animator != null)
         {
-            animator.SetFloat("MoveX", input.x);
+            animator.SetFloat("MoveX", Mathf.Abs(facingDirection.x));
+            animator.SetFloat("MoveY", facingDirection.y);
             animator.SetBool("IsMoving", input != Vector2.zero);
         }
 
