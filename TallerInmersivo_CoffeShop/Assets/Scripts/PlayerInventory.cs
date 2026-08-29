@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public enum ItemType
@@ -15,6 +16,8 @@ public class PlayerInventory : MonoBehaviour
 {
     public ItemType heldItem = ItemType.None;
 
+    public event Action<ItemType> OnItemChanged;
+
     public bool HasItem(ItemType item)
     {
         return heldItem == item;
@@ -24,10 +27,12 @@ public class PlayerInventory : MonoBehaviour
     {
         heldItem = item;
         Debug.Log("Ahora tienes: " + heldItem);
+        OnItemChanged?.Invoke(heldItem);
     }
 
     public void ClearItem()
     {
         heldItem = ItemType.None;
+        OnItemChanged?.Invoke(heldItem);
     }
 }

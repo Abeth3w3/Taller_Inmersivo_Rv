@@ -5,8 +5,8 @@ public class PlayerInteract : MonoBehaviour
     public Transform interactionPoint;
     public float interactionRadius = 0.6f;
     public LayerMask interactLayer;
+    public bool controlHabilitado = true;
 
-    
     public PlayerInventory inventory;
 
     [Header("Indicador visual 'presiona E'")]
@@ -21,8 +21,6 @@ public class PlayerInteract : MonoBehaviour
         if (interactionPoint == null)
             interactionPoint = transform.Find("InteractionPoint");
 
-        // Fallback: si no se asignó manualmente en el Inspector,
-        // intenta encontrarlo en el mismo GameObject.
         if (inventory == null)
             inventory = GetComponent<PlayerInventory>();
 
@@ -38,6 +36,15 @@ public class PlayerInteract : MonoBehaviour
 
     void Update()
     {
+        if (!controlHabilitado)
+        {
+            if (interactionPrompt != null)
+                interactionPrompt.SetActive(false);
+
+            currentTarget = null;
+            return;
+        }
+
         UpdateInteractionPrompt();
 
         if (Input.GetKeyDown(KeyCode.E))
@@ -46,8 +53,6 @@ public class PlayerInteract : MonoBehaviour
         }
     }
 
-    // Revisa cada frame si hay un Interactable cerca, y si lo hay,
-    // muestra el ícono "E" flotando encima de ese objeto.
     private void UpdateInteractionPrompt()
     {
         if (interactionPoint == null) return;
@@ -85,8 +90,6 @@ public class PlayerInteract : MonoBehaviour
         currentTarget.Interact(inventory);
     }
 
-    // Busca, entre todos los colliders detectados, el Interactable
-    // cuyo borde real (ClosestPoint) esté más cerca del InteractionPoint.
     private Interactable FindClosestInteractable()
     {
         Collider2D[] hits = Physics2D.OverlapCircleAll(

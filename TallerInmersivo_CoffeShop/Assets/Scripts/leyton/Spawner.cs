@@ -22,14 +22,17 @@ public class Spawner : MonoBehaviour
     public AudioClip sonidoCampana;
 
     private List<CafeTrigger> cola = new List<CafeTrigger>();
+    private bool spawnIniciado = false;
 
     void Awake()
     {
         instancia = this;
     }
 
-    void Start()
+    public void IniciarSpawn()
     {
+        if (spawnIniciado) return;
+        spawnIniciado = true;
         StartCoroutine(SpawnInicial());
     }
 
